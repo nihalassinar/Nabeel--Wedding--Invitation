@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP Admin Dashboard - Nabeel & Nidha</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Specific page override for dashboard layout */
+        .admin-dashboard-wrapper {
+            display: none; /* Shown after authentication */
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .action-link {
+            color: #ef4444;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        
+        .action-link:hover {
+            color: #f87171;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="container">
+        
+        <!-- Opening Quote (Blessings) Section -->
+        <header class="opening-quote">
+            <h1 class="gold-text" style="font-size: 2.2rem; text-align: center;">RSVP Admin Panel</h1>
+            <p style="text-align: center; font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem;">
+                Designer & Host Access Only
+            </p>
+            <div class="islamic-divider">
+                <svg viewBox="0 0 100 100" width="30" height="30">
+                    <circle cx="50" cy="50" r="10" />
+                </svg>
+            </div>
+        </header>
+
+        <!-- Passcode Authentication Card -->
+        <section id="auth-section" class="card-frame admin-login">
+            <h2 class="gold-text" style="font-size: 1.4rem; margin-bottom: 1.5rem;">Enter Admin Passcode</h2>
+            <div class="form-group">
+                <input type="password" id="passcode-input" class="form-input" style="text-align: center; letter-spacing: 5px;" placeholder="••••" maxlength="6">
+                <p id="auth-error" style="color: #f87171; font-size: 0.8rem; margin-top: 5px; display: none;">Invalid passcode. Try again.</p>
+            </div>
+            <button id="auth-btn" class="btn btn-gold" style="width: 100%; margin-top: 0.5rem;">
+                Unlock Dashboard
+            </button>
+        </section>
+
+        <!-- Admin Dashboard Content -->
+        <section id="dashboard-section" class="card-frame admin-card admin-dashboard-wrapper">
+            <div class="admin-header-row">
+                <div>
+                    <h2 class="gold-text" style="font-size: 1.8rem;">RSVP Summary</h2>
+                    <p style="font-size: 0.85rem; opacity: 0.7; margin-top: 2px;">Real-time Guest Tracker</p>
+                </div>
+                <div class="btn-group" style="margin-top: 0;">
+                    <button id="export-btn" class="btn btn-sm btn-gold">
+                        Export CSV
+                    </button>
+                    <button id="clear-btn" class="btn btn-sm btn-outline btn-danger">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Stats Counters -->
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 2rem;">
+                <div class="admin-stat">
+                    <div class="admin-stat-num" id="stat-total-rsvp">0</div>
+                    <div class="admin-stat-lbl">Responses</div>
+                </div>
+                <div class="admin-stat">
+                    <div class="admin-stat-num" id="stat-total-guests">0</div>
+                    <div class="admin-stat-lbl">Attending Guests</div>
+                </div>
+                <div class="admin-stat">
+                    <div class="admin-stat-num" id="stat-total-declined">0</div>
+                    <div class="admin-stat-lbl">Declined</div>
+                </div>
+            </div>
+
+            <!-- List of RSVP Submissions -->
+            <h3 class="gold-text" style="font-size: 1.2rem; margin-bottom: 0.8rem;">Guest Responses Details</h3>
+            <div class="table-responsive">
+                <table class="rsvp-table">
+                    <thead>
+                        <tr>
+                            <th>Guest Name</th>
+                            <th>Attending?</th>
+                            <th>Family Members</th>
+                            <th>Total Guests</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rsvp-table-body">
+                        <!-- Populated dynamically via JS -->
+                        <tr>
+                            <td colspan="6" style="text-align: center; opacity: 0.5; padding: 2rem;">No RSVPs received yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Designer Helper to add Mock RSVP for testing -->
+            <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212, 175, 55, 0.15); text-align: center;">
+                <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 1rem;">Designer testing shortcuts:</p>
+                <button id="add-mock-btn" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.5rem 1rem;">
+                    Add Mock Attending RSVP
+                </button>
+            </div>
+        </section>
+
+        <!-- Back to Invitation -->
+        <p style="text-align: center; font-size: 0.85rem; opacity: 0.6; margin: 2rem 0;">
+            <a href="index.html" style="color: var(--gold-light); text-decoration: none;">&larr; Back to Wedding Invitation</a>
+        </p>
+
+    </div>
+
+    <!-- Script specifically for the admin functions -->
+    <script>
+        const passcode = '1234'; // Same as configured in app.js
+        const authSection = document.getElementById('auth-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const passcodeInput = document.getElementById('passcode-input');
+        const authBtn = document.getElementById('auth-btn');
+        const authError = document.getElementById('auth-error');
+
+        // Check if passcode entered is valid
+        function authenticate() {
+            if (passcodeInput.value === passcode) {
+                authSection.style.display = 'none';
+                dashboardSection.style.display = 'block';
+                loadDashboardData();
+            } else {
+                authError.style.display = 'block';
+                passcodeInput.value = '';
+                passcodeInput.focus();
+            }
+        }
+
+        authBtn.addEventListener('click', authenticate);
+        passcodeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') authenticate();
+        });
+
+        // Load RSVPs from localStorage and compute values
+        function loadDashboardData() {
+            const rsvps = JSON.parse(localStorage.getItem('wedding_rsvps')) || [];
+            const tableBody = document.getElementById('rsvp-table-body');
+            
+            // Stats calculations
+            const totalRsvp = rsvps.length;
+            const totalAttending = rsvps.reduce((acc, curr) => acc + (curr.totalGuests || 0), 0);
+            const totalDeclined = rsvps.filter(r => r.attending === 'No').length;
+
+            document.getElementById('stat-total-rsvp').innerText = totalRsvp;
+            document.getElementById('stat-total-guests').innerText = totalAttending;
+            document.getElementById('stat-total-declined').innerText = totalDeclined;
+
+            if (rsvps.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; opacity: 0.5; padding: 2rem;">No RSVPs received yet.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = '';
+            // Sort: newest first
+            rsvps.reverse().forEach((rsvp) => {
+                const tr = document.createElement('tr');
+                
+                const isAttending = rsvp.attending === 'Yes';
+                const badgeClass = isAttending ? 'badge-yes' : 'badge-no';
+                const badgeText = isAttending ? 'Yes' : 'No';
+
+                tr.innerHTML = `
+                    <td style="font-weight: 500;">${rsvp.name}</td>
+                    <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+                    <td>${rsvp.familyCount || 0}</td>
+                    <td style="font-weight: 600; color: var(--gold-light);">${rsvp.totalGuests || 0}</td>
+                    <td>${rsvp.date || 'N/A'}</td>
+                    <td>
+                        <span class="action-link" onclick="deleteRsvp(${rsvp.id})">Delete</span>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Delete individual RSVP entry
+        window.deleteRsvp = function(id) {
+            if (confirm('Are you sure you want to delete this guest response?')) {
+                let rsvps = JSON.parse(localStorage.getItem('wedding_rsvps')) || [];
+                rsvps = rsvps.filter(r => r.id !== id);
+                localStorage.setItem('wedding_rsvps', JSON.stringify(rsvps));
+                loadDashboardData();
+            }
+        };
+
+        // Clear all RSVPs
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            if (confirm('WARNING: Are you sure you want to delete ALL RSVP responses? This action cannot be undone.')) {
+                localStorage.removeItem('wedding_rsvps');
+                loadDashboardData();
+            }
+        });
+
+        // Add Mock RSVP for Testing
+        document.getElementById('add-mock-btn').addEventListener('click', () => {
+            const mockNames = ['Jaleel Ahmed', 'Fathima Rahman', 'Zayd VP', 'Aisha Siddiqa', 'Riyaz Kunhi'];
+            const randomName = mockNames[Math.floor(Math.random() * mockNames.length)] + ' ' + (Math.floor(Math.random()*90) + 10);
+            const familyCount = Math.floor(Math.random() * 4); // 0 to 3
+            
+            const mockRsvp = {
+                id: Date.now(),
+                name: randomName,
+                attending: 'Yes',
+                familyCount: familyCount,
+                totalGuests: familyCount + 1,
+                date: new Date().toLocaleDateString()
+            };
+
+            let rsvps = JSON.parse(localStorage.getItem('wedding_rsvps')) || [];
+            rsvps.push(mockRsvp);
+            localStorage.setItem('wedding_rsvps', JSON.stringify(rsvps));
+            loadDashboardData();
+        });
+
+        // Export data to CSV
+        document.getElementById('export-btn').addEventListener('click', () => {
+            const rsvps = JSON.parse(localStorage.getItem('wedding_rsvps')) || [];
+            if (rsvps.length === 0) {
+                alert('No RSVP data to export.');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Guest Name,Attending,Family Members,Total Attending Count,Submission Date\n";
+
+            rsvps.forEach(r => {
+                const row = `"${r.name}","${r.attending}",${r.familyCount},${r.totalGuests},"${r.date}"`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "nabeel_nidha_wedding_rsvps.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Add particle effects to admin page background as well
+        // (Applies app.js particle logic locally for dashboard)
+        const canvas = document.getElementById('particles-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class DustParticle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speedY = Math.random() * 0.5 + 0.2;
+                    this.speedX = Math.random() * 0.8 - 0.4;
+                    this.color = `rgba(212, 175, 55, ${Math.random() * 0.4 + 0.1})`;
+                }
+                update() {
+                    this.y += this.speedY;
+                    this.x += this.speedX;
+                    if (this.y > canvas.height) {
+                        this.y = -10;
+                        this.x = Math.random() * canvas.width;
+                    }
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+
+            for(let i=0; i<30; i++) particles.push(new DustParticle());
+
+            function animate() {
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
