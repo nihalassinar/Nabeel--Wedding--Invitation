@@ -2,17 +2,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 :root {
-    --emerald-dark: #051d15;
-    --emerald-mid: #0c3527;
-    --emerald-light: #164e3c;
-    --gold-primary: #d4af37;
+    --bg-color: #faf9f6; /* Ivory/Alabaster Off-white */
+    --emerald-dark: #0b2b20;
+    --emerald-mid: #123e30;
+    --emerald-light: #e8eee9; /* Soft light sage for hovers */
+    --gold-primary: #bfa03f; /* Slightly deeper gold for high contrast on light backgrounds */
     --gold-light: #f3e5ab;
-    --gold-dark: #aa7c11;
-    --gold-gradient: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa7c11 100%);
-    --white-soft: #f4f6f5;
-    --glass-bg: rgba(22, 78, 60, 0.35);
-    --glass-border: rgba(212, 175, 55, 0.25);
-    --shadow-premium: 0 15px 35px rgba(0, 0, 0, 0.4);
+    --gold-dark: #876007;
+    --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa7c11 50%, #876007 100%);
+    --white-soft: #163a2f; /* Map soft text color to deep forest green for high contrast readability */
+    --glass-bg: rgba(255, 255, 255, 0.75); /* White glassmorphism card */
+    --glass-border: rgba(191, 160, 63, 0.2);
+    --shadow-premium: 0 15px 35px rgba(11, 43, 32, 0.08); /* Very soft premium shadow */
     --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -26,12 +27,12 @@ html {
     scroll-behavior: smooth;
     font-family: 'Montserrat', sans-serif;
     color: var(--white-soft);
-    background-color: var(--emerald-dark);
+    background-color: var(--bg-color);
     overflow-x: hidden;
 }
 
 body {
-    background: radial-gradient(circle at center, var(--emerald-mid) 0%, var(--emerald-dark) 100%);
+    background: radial-gradient(circle at center, #ffffff 0%, var(--bg-color) 100%);
     min-height: 100vh;
     line-height: 1.6;
     position: relative;
@@ -196,12 +197,12 @@ h1, h2, h3, .font-arabic {
 }
 
 .countdown-box {
-    background: rgba(5, 29, 21, 0.7);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(191, 160, 63, 0.25);
     border-radius: 8px;
     padding: 1rem;
     min-width: 75px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 20px rgba(11, 43, 32, 0.05);
 }
 
 .countdown-value {
@@ -296,7 +297,7 @@ h1, h2, h3, .font-arabic {
 /* Calendar Modal or Popover Options */
 .dropdown-menu {
     position: absolute;
-    background: var(--emerald-mid);
+    background: #ffffff;
     border: 1px solid var(--gold-primary);
     border-radius: 8px;
     box-shadow: var(--shadow-premium);
@@ -319,7 +320,7 @@ h1, h2, h3, .font-arabic {
 
 .dropdown-menu a:hover {
     background: var(--emerald-light);
-    color: var(--gold-light);
+    color: var(--emerald-dark);
 }
 
 .dropdown-container {
@@ -360,8 +361,8 @@ h1, h2, h3, .font-arabic {
 }
 
 .radio-card-content {
-    background: rgba(5, 29, 21, 0.5);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(191, 160, 63, 0.2);
     padding: 1.2rem 1rem;
     border-radius: 8px;
     font-size: 0.95rem;
@@ -371,9 +372,9 @@ h1, h2, h3, .font-arabic {
 
 .rsvp-radio-card input:checked + .radio-card-content {
     border-color: var(--gold-primary);
-    background: rgba(22, 78, 60, 0.6);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-    color: var(--gold-light);
+    background: rgba(18, 62, 48, 0.06);
+    box-shadow: 0 0 15px rgba(191, 160, 63, 0.15);
+    color: var(--emerald-dark);
     transform: translateY(-2px);
 }
 
@@ -411,8 +412,8 @@ h1, h2, h3, .font-arabic {
 .form-input {
     width: 100%;
     padding: 0.8rem 1rem;
-    background: rgba(5, 29, 21, 0.8);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(191, 160, 63, 0.25);
     border-radius: 8px;
     color: var(--white-soft);
     font-family: inherit;
@@ -423,15 +424,15 @@ h1, h2, h3, .font-arabic {
 .form-input:focus {
     outline: none;
     border-color: var(--gold-primary);
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 0 10px rgba(191, 160, 63, 0.2);
 }
 
 .guest-counter {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(5, 29, 21, 0.8);
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(191, 160, 63, 0.25);
     border-radius: 8px;
     padding: 0.5rem 1rem;
 }
@@ -490,14 +491,14 @@ h1, h2, h3, .font-arabic {
 }
 
 .admin-stat {
-    background: rgba(5, 29, 21, 0.6);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(191, 160, 63, 0.2);
     border-radius: 8px;
     padding: 1rem;
     text-align: center;
     flex: 1;
     min-width: 140px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .admin-stat-num {
@@ -526,27 +527,27 @@ h1, h2, h3, .font-arabic {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.85rem;
-    background: rgba(5, 29, 21, 0.4);
+    background: rgba(255, 255, 255, 0.6);
 }
 
 .rsvp-table th {
-    background: rgba(22, 78, 60, 0.8);
+    background: rgba(18, 62, 48, 0.9);
     color: var(--gold-light);
     font-family: 'Playfair Display', serif;
     font-weight: 600;
     text-align: left;
     padding: 1rem;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    border-bottom: 1px solid rgba(191, 160, 63, 0.3);
 }
 
 .rsvp-table td {
     padding: 1rem;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    border-bottom: 1px solid rgba(191, 160, 63, 0.1);
     color: var(--white-soft);
 }
 
 .rsvp-table tr:hover {
-    background: rgba(22, 78, 60, 0.2);
+    background: rgba(18, 62, 48, 0.05);
 }
 
 .badge {

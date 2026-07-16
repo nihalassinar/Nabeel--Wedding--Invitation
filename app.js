@@ -160,8 +160,8 @@ const icsData = [
     'DTSTAMP:20260707T000000Z',
     'DTSTART:20260816T063000Z', // 12:00 PM IST is 6:30 AM UTC
     'DTEND:20260816T103000Z',
-    'SUMMARY:Wedding of Nabeel & Nidha',
-    'DESCRIPTION:You are cordially invited to the wedding ceremony of Nabeel VP and Nidha Sharaf at VP House, Mattool South.',
+    'SUMMARY:Wedding Reception of Nabeel & Nidha',
+    'DESCRIPTION:You are cordially invited to the wedding reception of Nabeel VP and Nidha Sharaf at VP House, Mattool South.',
     'LOCATION:VP House, Mattool South',
     'END:VEVENT',
     'END:VCALENDAR'
@@ -245,9 +245,9 @@ if (rsvpForm) {
         // 2. Format WhatsApp Share link (the "wonderful link")
         let messageText = '';
         if (willAttend) {
-            messageText = `Hi Nabeel, I will be attending your wedding with joy along with ${familyMembers} family members! - ${guestName}`;
+            messageText = `Hi Nabeel, I will be attending your wedding reception along with ${familyMembers} family members! - ${guestName}`;
         } else {
-            messageText = `Hi Nabeel, I'm sorry, I won't be able to make it to the wedding. Sending my warmest wishes!`;
+            messageText = `Hi Nabeel, I'm sorry, I won't be able to make it to the wedding reception. Sending my warmest wishes!`;
         }
         
         const encodedMsg = encodeURIComponent(messageText);
